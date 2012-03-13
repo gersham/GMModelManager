@@ -14,7 +14,7 @@ static GMModelManager *shared = nil;
 @synthesize cache = _cache;
 @synthesize cacheSize = _cacheSize;
 
-- (void)cacheModelObject:(ETModel *)object {
+- (void)cacheModelObject:(GMModel *)object {
     if (object.uuid == nil) 
         return;
     if (_cache == nil) {

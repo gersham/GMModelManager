@@ -15,8 +15,8 @@
 @interface GMModelManager : NSObject
 
 + (GMModelManager *)shared;
-- (void)cacheModelObject:(ETModel *)object;
-- (ETModel *)objectForUUID:(NSString *)uuid;
+- (void)cacheModelObject:(GMModel *)object;
+- (GMModel *)objectForUUID:(NSString *)uuid;
 
 @property (nonatomic, strong) NSCache *cache;
 @property (nonatomic, assign) NSInteger cacheSize;
