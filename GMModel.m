@@ -6,7 +6,6 @@
 //
 
 #import "GMModel.h"
-#import "GMModelManager.h"
 
 @implementation GMModel
 @synthesize values = _values;
