@@ -44,7 +44,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"ETModel %@", self.uuid];
+    return [NSString stringWithFormat:@"GMModel %@", self.uuid];
 }
 
 # pragma mark - Dynamic Properties
