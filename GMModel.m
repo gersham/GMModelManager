@@ -11,6 +11,43 @@
 @synthesize values = _values;
 @synthesize uuid = _uuid;
 
+static NSMutableDictionary *camelCaseStrings = nil;
+
++ (NSString *)camelCaseString:(NSString *)string {
+    
+    if (camelCaseStrings == nil)
+        camelCaseStrings = [NSMutableDictionary dictionary];
+    
+    if ([camelCaseStrings objectForKey:string])
+        return [camelCaseStrings objectForKey:string];
+    
+    NSMutableString *output = [NSMutableString string];
+    BOOL makeNextCharacterUpperCase = NO;
+    for (NSInteger idx = 0; idx < [string length]; idx += 1) {
+        unichar c = [string characterAtIndex:idx];
+        if (c == '_') {
+            makeNextCharacterUpperCase = YES;
+        } else if (makeNextCharacterUpperCase) {
+            [output appendString:[[NSString stringWithCharacters:&c length:1] uppercaseString]];
+            makeNextCharacterUpperCase = NO;
+        } else {
+            [output appendFormat:@"%C", c];
+        }
+    }
+    
+    [camelCaseStrings setObject:output forKey:string];
+    
+    return output;
+}
+
++ (ETVenue *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create {
+    return nil;
+}
+
++ (NSArray *)objectArrayFromArray:(NSArray *)array {
+    return nil;
+}
+
 + (NSString *)uuidFromValues:(NSDictionary *)values {
     if ([values valueForKey:@"id"]) {
         return [values valueForKey:@"id"];
@@ -21,6 +58,18 @@
     }
 }
 
+- (void)setValues:(NSMutableDictionary *)values {
+    if (_values == nil) 
+        _values = [NSMutableDictionary dictionaryWithCapacity:values.count];
+    
+    if (values == nil)
+        return;
+
+    for (NSString *key in values.allKeys) {
+        [self setValue:[values valueForKey:key] forKey:key];
+    }
+}
+
 - (NSMutableDictionary *)values {
     if (_values == nil) 
         _values = [NSMutableDictionary dictionary];
@@ -28,11 +77,72 @@
 }
 
 - (void)updateWithValues:(NSDictionary *)values {
-    self.values = [NSMutableDictionary dictionaryWithDictionary:values];
+    if (_values == nil) 
+        _values = [NSMutableDictionary dictionaryWithCapacity:values.count];
+
+    if (values == nil)
+        return;
+    
+    for (NSString *key in values.allKeys) {
+        [self setValue:[values valueForKey:key] forKey:key];
+    }
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key {
-    [_values setValue:value forKey:key];
+        
+    NSString *camelKey = [GMModel camelCaseString:key];
+        
+    if (_values == nil) 
+        _values = [NSMutableDictionary dictionary];
+
+    if (value == nil || [value isEqual:[NSNull null]]) {
+        if ([_values objectForKey:camelKey]) {
+            [_values removeObjectForKey:camelKey];
+        }
+        
+    } else if ([camelKey isEqualToString:@"id"]) {
+        self.uuid = value;
+        
+    } else if ([camelKey isEqualToString:@"uuid"]) {
+        self.uuid = value;
+        
+    } else if ([value isKindOfClass:[NSArray class]]) {
+        [_values setValue:[self parseValuesFromArray:value] forKey:camelKey];
+                
+    } else {
+        [_values setValue:value forKey:camelKey];
+    }
+}
+
+- (NSArray *)parseValuesFromArray:(NSArray *)array {
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (id item in array) {
+        if (![item isKindOfClass:[NSDictionary dictionary]]) {
+                        
+            NSDictionary *dictionary = [NSMutableDictionary dictionary];
+            for (NSString *key in [(NSDictionary *)item allKeys]) {
+                
+                id value = [(NSDictionary *)item valueForKey:key];
+                
+                if (value == nil || [value isEqual:[NSNull null]]) 
+                    continue;
+                
+                if ([value isKindOfClass:[NSArray class]]) {
+                    [dictionary setValue:[self parseValuesFromArray:value] forKey:key];
+                    
+                } else {
+                    [dictionary setValue:value forKey:key];
+                }
+            }
+            [result addObject:dictionary];
+            
+        } else {
+            [result addObject:item];
+        }
+    }
+    return result;
 }
 
 - (id)valueForKey:(NSString *)key {

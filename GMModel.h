@@ -13,12 +13,15 @@
 @property (nonatomic, strong) NSMutableDictionary *values;
 @property (nonatomic, strong) NSString *uuid;
 
++ (ETVenue *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create;
++ (NSArray *)objectArrayFromArray:(NSArray *)array;
 + (NSString *)uuidFromValues:(NSDictionary *)values;
 
 - (void)updateWithValues:(NSDictionary *)values;
 - (void)setValue:(id)value forKey:(NSString *)key;
 - (id)valueForKey:(NSString *)key;
 - (id)valueForKeyPath:(NSString *)keyPath;
+- (NSArray *)parseValuesFromArray:(NSArray *)array;
 
 @end
 
