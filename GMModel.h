@@ -13,7 +13,7 @@
 @property (nonatomic, strong) NSMutableDictionary *values;
 @property (nonatomic, strong) NSString *uuid;
 
-+ (ETVenue *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create;
++ (GMModel *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create;
 + (NSArray *)objectArrayFromArray:(NSArray *)array;
 + (NSString *)uuidFromValues:(NSDictionary *)values;
 
