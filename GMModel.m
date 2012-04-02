@@ -40,7 +40,7 @@ static NSMutableDictionary *camelCaseStrings = nil;
     return output;
 }
 
-+ (ETVenue *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create {
++ (GMModel *)objectWithValues:(NSDictionary *)values createIfNotFound:(BOOL)create {
     return nil;
 }
 
