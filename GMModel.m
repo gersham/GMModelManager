@@ -119,7 +119,7 @@ static NSMutableDictionary *camelCaseStrings = nil;
     NSMutableArray *result = [NSMutableArray array];
     
     for (id item in array) {
-        if (![item isKindOfClass:[NSDictionary dictionary]]) {
+        if ([item isKindOfClass:[NSDictionary dictionary]]) {
                         
             NSDictionary *dictionary = [NSMutableDictionary dictionary];
             for (NSString *key in [(NSDictionary *)item allKeys]) {
